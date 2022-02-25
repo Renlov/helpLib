@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "190582383581",
+    "project_id": "test-alpes",
+    "storage_bucket": "test-alpes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190582383581:android:0718332415ddddc9c70c34",
+        "android_client_info": {
+          "package_name": "com.hedgehog.helplib"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "190582383581-jieai7estq4k69m2841kk2qpqmu1kfdo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjE8jnA8ngc4ANrkz5UaDUdRdSwzWgiqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "190582383581-jieai7estq4k69m2841kk2qpqmu1kfdo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
