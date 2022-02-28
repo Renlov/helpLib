@@ -13,9 +13,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".HelpActivity"
-            android:exported="false" />
-        <activity
-            android:name=".StartActivity"
+            android:configChanges="orientation|screenSize"
             android:exported="false" />
     </application>
 

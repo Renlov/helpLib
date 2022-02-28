@@ -13,7 +13,7 @@ data class Link(
     val app_name: String,
     val link: String?,
     val appsFlyer: String,
-    val fb: String?
+    val ip: String?
 )
 
 
