@@ -4,6 +4,7 @@ plugins {
     id 'com.onesignal.androidsdk.onesignal-gradle-plugin'
     id 'com.google.gms.google-services'
     id 'kotlin-parcelize'
+    id 'maven-publish'
 }
 
 android {
