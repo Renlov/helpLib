@@ -2,6 +2,7 @@ package com.alpes.utils
 
 import com.squareup.moshi.JsonClass
 
+
 @JsonClass(generateAdapter = true)
 data class Wrapper(
     val links: List<Link>
