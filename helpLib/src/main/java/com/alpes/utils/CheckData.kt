@@ -3,10 +3,11 @@ package com.alpes.utils
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
+import androidx.annotation.Keep
 import com.alpes.helplib.HelpActivity
 
-class CheckData {
-    suspend fun <T : Activity> T.initHelp(appId: String, intent: Intent) {
+@Keep
+suspend fun <T : Activity> T.initHelp(appId: String, intent: Intent) {
         val a =
             Networking.getString.getRoot2("https://my-json-server.typicode.com/HedgLib/demo/db").links.firstOrNull {
                 it.app_id == appId
@@ -21,4 +22,4 @@ class CheckData {
         })
         Log.d("spectra", a.toString())
     }
-}
+

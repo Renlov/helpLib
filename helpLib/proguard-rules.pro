@@ -22,4 +22,3 @@
 
 -keep class com.alpes.utils.Wrapper { *; }
 -keep class com.alpes.utils.Link { *; }
--keep class com.alpes.utils.CheckDataKt{ *; }
