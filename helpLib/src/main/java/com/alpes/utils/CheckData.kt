@@ -4,10 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import com.alpes.helplib.HelpActivity
-import com.onesignal.OneSignal
 
-suspend fun<T : Activity> T.initHelp(oneSignal : String, appId : String, intent: Intent){
-    OneSignal.setAppId(oneSignal)
+suspend fun<T : Activity> T.initHelp(appId : String, intent: Intent){
     val a = Networking.getString.getRoot2("https://my-json-server.typicode.com/HedgLib/demo/db").links.firstOrNull{
         it.app_id==appId
     }
