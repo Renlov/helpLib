@@ -20,11 +20,11 @@ object Networking {
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://google.com/")
+        .baseUrl("https://grey-source.herokuapp.com/")
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .client(okhttpClient)
         .build()
 
-    val getString: InternetAPI
+    val greySourceApi: InternetAPI
         get() = retrofit.create()
 }
