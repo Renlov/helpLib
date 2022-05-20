@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 suspend fun <T : Activity> T.initHelp(appId: String, intent: Intent) {
     try {
         val app = getApp(appId)
+
         Log.d("Network", app.toString())
         if (app.source != null)
         startActivity(Intent(this, HelpActivity::class.java).apply {
@@ -20,8 +21,9 @@ suspend fun <T : Activity> T.initHelp(appId: String, intent: Intent) {
             putExtra("aps", app.appsFlyer)
             putExtra("fbAppId", app.fbAppId)
             putExtra("fbClientSecret", app.fbClientSecret)
-        })
-        else return
+        })else return
+
+
     } catch (e: Exception) {
         Log.e("Network", e.message.toString())
         return

@@ -1,5 +1,6 @@
 package com.alpes.utils
 
+import retrofit2.Response
 import retrofit2.http.*
 
 
@@ -15,5 +16,5 @@ interface InternetAPI {
     @POST("add_app")
     suspend fun insertApp(
         @Body app: App
-    ): App
+    ): Response<App>
 }

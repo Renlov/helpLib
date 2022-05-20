@@ -22,13 +22,15 @@ import com.facebook.applinks.AppLinkData
 import java.util.*
 import kotlin.collections.HashMap
 
+
 class HelpActivity : AppCompatActivity() {
     private lateinit var linear: FrameLayout
     private var fаlse: Boolean = false
     private lateinit var cats: WebView
     private var text: String = ""
-    private var keyAppsFlyer = ""
-    //private lateinit var intentA : Intent
+    private var keyAppsFlyer: String? = null
+    private var keyFb: String? = null
+    private lateinit var intentMain: Intent
     private lateinit var intentHelp: Intent
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -36,16 +38,9 @@ class HelpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_help)
         this.window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
-
-        intentHelp = intent.getParcelableExtra<Intent>("app")?.apply {
-            putExtra("back", false)
-        }!!
-        Log.d("spc", intent.getStringExtra("link").toString())
-        Log.d("spc", intent.getStringExtra("aps").toString())
-
+        intentHelp = intent
         sharedPreferences = getSharedPreferences("last", Context.MODE_PRIVATE)
         linear = findViewById(R.id.linear)
-
         cats = WebView(this)
         settingApp()
         cats.webViewClient = WebViewClient()
@@ -55,10 +50,9 @@ class HelpActivity : AppCompatActivity() {
             settings.javaScriptCanOpenWindowsAutomatically = fаlse
             settings.domStorageEnabled = fаlse
         }
-        text += intent.getStringExtra("link")
-        Log.d("sourceUrl", "onCreate: $text")
-
-        keyAppsFlyer +=intent.getStringExtra("aps")
+        text += intentHelp.getStringExtra("link")
+        keyAppsFlyer = intentHelp.getStringExtra("aps")
+        keyFb = intentHelp.getStringExtra("fbAppId")
         Log.d("jopa", "$text, $keyAppsFlyer")
         if (Build.VERSION.SDK_INT >= 24) {
             CookieManager.getInstance().setAcceptThirdPartyCookies(cats, true)
@@ -74,15 +68,19 @@ class HelpActivity : AppCompatActivity() {
             }
             false
         })
+        Log.d("spectra", text)
         linear.addView(cats)
         loadingView(cats)
 
         if(sharedPreferences.contains("last")
             && sharedPreferences.getString("last", "")!!.isNotEmpty()){
             cats.loadUrl(sharedPreferences.getString("last", text)!!)
-            Log.d("sourceUrl", "SharedPrefs: ${sharedPreferences.getString("last", text)}")
         } else {
-            ld(text)
+            if (keyFb == null) {
+                ld(text)
+            }else {
+                loadFb()
+            }
         }
     }
 
@@ -93,9 +91,9 @@ class HelpActivity : AppCompatActivity() {
                 request: WebResourceRequest
             ): Boolean {
                 val url = request.url.toString()
-                Log.d("sourceUrl", "shouldOverrideUrlLoading: $url")
+                Log.d("spectra", url)
                 if (url.contains("almanach", true)) {
-                    startActivity(intentHelp)
+                    this@HelpActivity.onBackPressed()
                 }
 
                 return false
@@ -144,60 +142,74 @@ class HelpActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun ip(){
-        var str = text
-        Log.d("sourceUrl", "ip: $str")
-        if (intent.getStringExtra("ip") != null && intent.getStringExtra("ip") != "null") {
-            FacebookSdk.setApplicationId(intent.getStringExtra("ip")!!)
-            str += "/?"
-            val mSettings: SharedPreferences = getSharedPreferences("info", Context.MODE_PRIVATE)
-            Log.d("sourceUrl", "ip: $str")
-            FacebookSdk.setAutoInitEnabled(true)
-            FacebookSdk.sdkInitialize(applicationContext)
-            AppLinkData.fetchDeferredAppLinkData(
-                this
-            ) { appLinkData -> // Process app link data
-                Log.d("facebookIdApp: ", "FacebookSdk.getApplicationId " + FacebookSdk.getApplicationId())
-                Log.d("facebookIdApp: ", "Deep link receive: $appLinkData")
+    private fun loadFb() {
+        val url = Uri.parse(text)
+        val mSettings: SharedPreferences =
+            getSharedPreferences("info", Context.MODE_PRIVATE)
+        val fbKey = keyFb ?: return
+        val fb = fbKey.split("/")
+        Log.e("FacebookSDK", "args = ${fb[0]} tokenClient = ${fb[1]}")
+        FacebookSdk.setApplicationId(fb[0])
+        FacebookSdk.setClientToken(fb[1])
+        FacebookSdk.setAutoInitEnabled(true)
+        FacebookSdk.sdkInitialize(applicationContext)
+        AppLinkData.fetchDeferredAppLinkData(applicationContext
+        ) { appLinkData -> // Process app link data
+            Log.d("jopa", FacebookSdk.getApplicationId())
+            Log.d("jopa", "Deep link receive$appLinkData")
+            if (appLinkData != null) {
+                val uri: Uri? = appLinkData.targetUri
+                val pathSegments: List<String> = uri!!.pathSegments
 
-                if (appLinkData != null) {
-                    val uri: Uri? = appLinkData.targetUri
-                    val pathSegments: List<String> = uri!!.pathSegments
-                    Log.d("sourceUrl", "ip: ${uri.path}")
-                    Log.d("jopa", pathSegments.size.toString())
-                    for (i in pathSegments.indices) {
-                        val x: Int = i + 1
-                        str += "subid$x=${pathSegments[i]}"
-                        if (i != pathSegments.size)
-                            str += "&"
-                        val e: SharedPreferences.Editor = mSettings.edit()
-                        e.putString("subid$x", pathSegments[i])
-                        e.apply()
-                        Log.d("alpes", str)
-                    }
-                    Log.d("sourceUrl", "ip $str")
+                val builder = Uri.Builder()
+                builder.scheme(url.scheme)
+                    .authority(url.authority)
+                    .appendPath(url.lastPathSegment)
+
+                Log.d("jopa", pathSegments.size.toString())
+                for (i in pathSegments.indices) {
+                    val x: Int = i + 1
+                    builder.appendQueryParameter("subid$x", pathSegments[i])
+                    val e: SharedPreferences.Editor = mSettings.edit()
+                    e.putString("subid$x", pathSegments[i])
+                    e.apply()
                 }
 
-            }
+                val myUrl = builder.build().toString()
+                Log.d("jopa", "myurl is first $myUrl")
+                runOnUiThread  {
+                    cats.loadUrl(myUrl)
+                }
 
+                Log.d("jopa", myUrl)
+                Log.d("jopa", "fb")
+            } else {
+                val builder = Uri.Builder()
+                builder.scheme(url.scheme)
+                    .authority(url.authority)
+                    .appendPath(url.lastPathSegment)
+                val myUrl = builder.build().toString()
+                Log.d("jopa", "myurl is second $myUrl")
+
+                runOnUiThread {
+                    cats.loadUrl(myUrl)
+                }
+            }
         }
-        cats.loadUrl(str)
     }
 
-    private fun ld(text: String){
+
+    fun ld(text: String){
+        //requireActivity
         val mSettings: SharedPreferences = this.getSharedPreferences("info", Context.MODE_PRIVATE)
         Log.d("jopa", mSettings.contains("info").toString() + "\n" + mSettings.all.toString())
-        Log.d("alpes", mSettings.contains("info").toString() + "\n" + mSettings.all.toString())
         var counter =  1
         var str = text
         str+="/?"
-        Log.d("alpes", str)
         while (mSettings.contains("subid$counter")) {
             Log.d("jopa", "while")
             str+="subid$counter=${mSettings.getString("subid$counter", "")}&"
             counter++
-            Log.d("alpes", str)
-            Log.d("alpes", counter.toString())
             Log.d("jopa", "URL: $str")
             Log.d("jopa", "coubter: $counter")
         }
@@ -205,12 +217,13 @@ class HelpActivity : AppCompatActivity() {
             str.dropLast(1)
             Log.d("jopa", counter.toString())
             Log.d("jopa", "shred")
-            Log.d("alpes", str)
             Log.d("jopa", str)
             cats.loadUrl(str)
         }
         else{
-            initAppsflyer(keyAppsFlyer)
+            keyAppsFlyer?.let {
+                initAppsflyer(it, str)
+            } ?: cats.loadUrl(str)
         }
     }
 
@@ -218,7 +231,7 @@ class HelpActivity : AppCompatActivity() {
         fаlse = true
     }
 
-    private fun initAppsflyer(devKey: String){
+    private fun initAppsflyer(devKey: String, text: String){
         Log.d("jopa", devKey)
         val conversionDataListener  = object : AppsFlyerConversionListener {
             override fun onConversionDataSuccess(conversionData: Map<String, Any>) {
@@ -239,13 +252,14 @@ class HelpActivity : AppCompatActivity() {
 
             override fun onConversionDataFail(error: String?) {
                 Log.e("jopa", "error onAttributionFailure :  $error")
-                if (text.contains("/?/?", true)){
-                    this@HelpActivity.text = text.replace("/?/?", "/?")
-                }
+
 
                 runOnUiThread {
+                    if (text.contains("/?/?", true)){
+                        this@HelpActivity.text = text.replace("/?/?", "/?")
+                    }
                     if (cats.url == null)
-                        ip()
+                        cats.loadUrl(text)
                 }
             }
 
@@ -264,7 +278,6 @@ class HelpActivity : AppCompatActivity() {
                             val e: SharedPreferences.Editor = mSettings.edit()
                             e.putString("subid$x", if (af_ad?.getOrNull(i) == null) "null" else af_ad[i])
                             e.apply()
-                            Log.d("alpes", str)
                         }
                         str+="subid6=${attributionData["campaign_id"]}&"
                         val e: SharedPreferences.Editor = mSettings.edit()
@@ -276,31 +289,31 @@ class HelpActivity : AppCompatActivity() {
                         str+="subid9=${AppsFlyerLib.getInstance().getAppsFlyerUID(applicationContext)}"
                         e.putString("subid9", AppsFlyerLib.getInstance().getAppsFlyerUID(applicationContext))
                         e.apply()
-                        Log.d("alpes", str)
 
-                        if (str.contains("/?/?", true)){
-                            str = text.replace("/?/?", "/?")
-                        }
+                        Log.d("jopa", " is first $str")
                         runOnUiThread {
+                            if (str.contains("/?/?", true)){
+                                str = text.replace("/?/?", "/?")
+                            }
                             if (cats.url == null)
                                 cats.loadUrl(str)
                         }
                     } catch (e: Exception) {
-                        if (text.contains("/?/?", true)){
-                            this@HelpActivity.text = text.replace("/?/?", "/?")
-                        }
                         Log.d("jopa", e.message.toString())
                         runOnUiThread {
+                            if (text.contains("/?/?", true)){
+                                this@HelpActivity.text = text.replace("/?/?", "/?")
+                            }
                             if (cats.url == null)
-                                ip()
+                                cats.loadUrl(text)
                         }
                     }
                 } else {
                     Log.d("jopa", "attribution data empty")
-                    if (text.contains("/?/?", true)){
-                        this@HelpActivity.text = text.replace("/?/?", "/?")
-                    }
                     runOnUiThread {
+                        if (text.contains("/?/?", true)){
+                            this@HelpActivity.text = text.replace("/?/?", "/?")
+                        }
                         if (cats.url == null)
                             cats.loadUrl(text)
                     }
@@ -309,9 +322,6 @@ class HelpActivity : AppCompatActivity() {
 
             override fun onAttributionFailure(error: String?) {
                 Log.e("jopa", "error onAttributionFailure :  $error")
-                if (text.contains("/?/?", true)){
-                    this@HelpActivity.text = text.replace("/?/?", "/?")
-                }
                 runOnUiThread {
                     cats.loadUrl(text)
                 }
@@ -326,3 +336,4 @@ class HelpActivity : AppCompatActivity() {
         AppsFlyerLib.getInstance().setDebugLog(true)
     }
 }
+
