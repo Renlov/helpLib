@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         if (intent.getBooleanExtra("back", true)) {
             CoroutineScope(Dispatchers.IO).launch {
-                initHelp("com.hedgehog.helplib",
+                initHelp("com.blackpanther.ninjaarash",
                     Intent(applicationContext, MainActivity::class.java)
                 )
             }
