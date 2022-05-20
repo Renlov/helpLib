@@ -37,12 +37,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    externalNativeBuild {
-        cmake {
-            path file('src/main/cpp/CMakeLists.txt')
-            version '3.18.1'
-        }
-    }
 }
 
 task deleteJar(type: Delete) {
