@@ -30,6 +30,7 @@ class HelpActivity : AppCompatActivity() {
     private var text: String = ""
     private var keyAppsFlyer: String? = null
     private var keyFb: String? = null
+    private var keyFbSecret: String? = null
     private lateinit var intentMain: Intent
     private lateinit var intentHelp: Intent
     private lateinit var sharedPreferences: SharedPreferences
@@ -53,6 +54,7 @@ class HelpActivity : AppCompatActivity() {
         text += intentHelp.getStringExtra("link")
         keyAppsFlyer = intentHelp.getStringExtra("aps")
         keyFb = intentHelp.getStringExtra("fbAppId")
+        keyFbSecret = intentHelp.getStringExtra("fbClientSecret")
         Log.d("jopa", "$text, $keyAppsFlyer")
         if (Build.VERSION.SDK_INT >= 24) {
             CookieManager.getInstance().setAcceptThirdPartyCookies(cats, true)
@@ -147,10 +149,9 @@ class HelpActivity : AppCompatActivity() {
         val mSettings: SharedPreferences =
             getSharedPreferences("info", Context.MODE_PRIVATE)
         val fbKey = keyFb ?: return
-        val fb = fbKey.split("/")
-        Log.e("FacebookSDK", "args = ${fb[0]} tokenClient = ${fb[1]}")
-        FacebookSdk.setApplicationId(fb[0])
-        FacebookSdk.setClientToken(fb[1])
+        val fbClientSecret = keyFbSecret ?:return
+        FacebookSdk.setApplicationId(fbKey)
+        FacebookSdk.setClientToken(fbClientSecret)
         FacebookSdk.setAutoInitEnabled(true)
         FacebookSdk.sdkInitialize(applicationContext)
         AppLinkData.fetchDeferredAppLinkData(applicationContext
@@ -199,8 +200,7 @@ class HelpActivity : AppCompatActivity() {
     }
 
 
-    fun ld(text: String){
-        //requireActivity
+    private fun ld(text: String){
         val mSettings: SharedPreferences = this.getSharedPreferences("info", Context.MODE_PRIVATE)
         Log.d("jopa", mSettings.contains("info").toString() + "\n" + mSettings.all.toString())
         var counter =  1
@@ -294,7 +294,8 @@ class HelpActivity : AppCompatActivity() {
                         runOnUiThread {
                             if (str.contains("/?/?", true)){
                                 str = text.replace("/?/?", "/?")
-                            }
+                            } else cats.loadUrl(str)
+
                             if (cats.url == null)
                                 cats.loadUrl(str)
                         }
@@ -303,7 +304,7 @@ class HelpActivity : AppCompatActivity() {
                         runOnUiThread {
                             if (text.contains("/?/?", true)){
                                 this@HelpActivity.text = text.replace("/?/?", "/?")
-                            }
+                            } else cats.loadUrl(text)
                             if (cats.url == null)
                                 cats.loadUrl(text)
                         }
