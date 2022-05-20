@@ -1,5 +1,6 @@
 package com.alpes.utils
 
+import androidx.annotation.Keep
 import com.squareup.moshi.JsonClass
 
 
@@ -18,6 +19,7 @@ data class Link(
 )
 
 
+@Keep
 @JsonClass(generateAdapter = true)
 data class App(
     val bundle: String,
