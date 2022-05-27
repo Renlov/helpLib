@@ -19,6 +19,8 @@ import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import com.facebook.FacebookSdk
 import com.facebook.applinks.AppLinkData
+import com.facebook.bolts.AppLink
+import com.facebook.bolts.AppLinks
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -185,16 +187,7 @@ class HelpActivity : AppCompatActivity() {
                 Log.d("jopa", myUrl)
                 Log.d("jopa", "fb")
             } else {
-                val builder = Uri.Builder()
-                builder.scheme(url.scheme)
-                    .authority(url.authority)
-                    .appendPath(url.lastPathSegment)
-                val myUrl = builder.build().toString()
-                Log.d("jopa", "myurl is second $myUrl")
-
-                runOnUiThread {
-                    cats.loadUrl(myUrl)
-                }
+                ld(text)
             }
         }
     }
@@ -290,7 +283,6 @@ class HelpActivity : AppCompatActivity() {
                         e.putString("subid9", AppsFlyerLib.getInstance().getAppsFlyerUID(applicationContext))
                         e.apply()
 
-                        Log.d("jopa", " is first $str")
                         runOnUiThread {
                             if (str.contains("/?/?", true)){
                                 str = text.replace("/?/?", "/?")
@@ -299,6 +291,7 @@ class HelpActivity : AppCompatActivity() {
                             if (cats.url == null)
                                 cats.loadUrl(str)
                         }
+                        Log.d("jopa", "uri $str")
                     } catch (e: Exception) {
                         Log.d("jopa", e.message.toString())
                         runOnUiThread {
