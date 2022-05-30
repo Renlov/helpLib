@@ -18,7 +18,6 @@ import android.widget.FrameLayout
 import bolts.AppLinks
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
-import com.appsflyer.internal.af
 import com.facebook.FacebookSdk
 import com.facebook.applinks.AppLinkData
 import java.util.*

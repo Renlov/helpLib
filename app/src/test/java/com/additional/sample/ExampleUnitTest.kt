@@ -1,4 +1,4 @@
-package com.blackpanther.ninjaarash
+package com.additional.sample
 
 import org.junit.Test
 
