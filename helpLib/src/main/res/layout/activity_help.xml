@@ -6,4 +6,12 @@
     android:background="@color/black"
     android:layout_height="match_parent">
 
+    <ProgressBar
+        android:elevation="10dp"
+        android:progressTint="#FFFFFF"
+        android:visibility="visible"
+        android:id="@+id/spinnerLoad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </FrameLayout>

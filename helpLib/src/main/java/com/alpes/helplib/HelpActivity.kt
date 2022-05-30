@@ -15,6 +15,7 @@ import android.view.View
 import android.view.WindowManager
 import android.webkit.*
 import android.widget.FrameLayout
+import android.widget.ProgressBar
 import bolts.AppLinks
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
@@ -98,6 +99,7 @@ class HelpActivity : AppCompatActivity() {
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                 val url = request.url.toString()
+                findViewById<ProgressBar>(R.id.spinnerLoad).visibility = View.GONE
                 Log.d(TAG, "loadingView : url is $url")
                 if (url.contains("almanach", true)) {
                     Log.d(TAG, "almanach")
