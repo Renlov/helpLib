@@ -99,7 +99,6 @@ class HelpActivity : AppCompatActivity() {
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                 val url = request.url.toString()
-                findViewById<ProgressBar>(R.id.spinnerLoad).visibility = View.GONE
                 Log.d(TAG, "loadingView : url is $url")
                 if (url.contains("almanach", true)) {
                     Log.d(TAG, "almanach")
@@ -215,6 +214,7 @@ class HelpActivity : AppCompatActivity() {
         Log.d(TAG, "ld fun mSettings : ${mSettings.contains("info").toString() + "\n" + mSettings.all}")
         var counter = 1
         var str = text
+        if (mSettings.contains("subid$counter"))
         str += "/?"
         while (mSettings.contains("subid$counter")) {
             str += "subid$counter=${mSettings.getString("subid$counter", "")}&"
@@ -222,11 +222,16 @@ class HelpActivity : AppCompatActivity() {
         }
         if (counter != 1) {
             str.dropLast(1)
+            Log.d(TAG, "loadUrl = $str")
             cats.loadUrl(str)
         } else {
             keyAppsFlyer?.let {
+                Log.d(TAG, "initAps = $str")
                 initAppsflyer(it, str)
-            } ?: cats.loadUrl(str)
+            } ?: run {
+                Log.d(TAG, "loadUrl = $str")
+                cats.loadUrl(str)
+            }
         }
     }
 
@@ -271,7 +276,7 @@ class HelpActivity : AppCompatActivity() {
                             getSharedPreferences("info", Context.MODE_PRIVATE)
 
                         var str = text
-                        str += "/?"
+                        str += "?"
                         for (i in 0..4) {
                             val x: Int = i + 1
                             str += "subid$x=${if (af_ad?.getOrNull(i) == null) "null" else af_ad[i]}&"
@@ -350,7 +355,7 @@ class HelpActivity : AppCompatActivity() {
         Log.d(TAG, "init0")
         AppsFlyerLib.getInstance().init(devKey, conversionDataListener, this)
         AppsFlyerLib.getInstance().setMinTimeBetweenSessions(0)
-        AppsFlyerLib.getInstance().start(applicationContext)
+        AppsFlyerLib.getInstance().start(this)
         AppsFlyerLib.getInstance().setDebugLog(true)
     }
 }

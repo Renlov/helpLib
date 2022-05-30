@@ -1,4 +1,4 @@
-package com.additional.sample
+package com.blackpanther.ninjaarash
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         if (intent.getBooleanExtra("back", true)) {
             CoroutineScope(Dispatchers.IO).launch {
-                initHelp("com.hyjihyida.dtyegwdgtye",
+                initHelp("com.blackpanther.ninjaarash",
                     Intent(applicationContext, MainActivity::class.java)
                 )
             }
