@@ -15,15 +15,10 @@ suspend fun <T : Activity> T.initHelp(appId: String, intent: Intent) {
 
         Log.d("Network", app.toString())
         if (app.source != null)
-        startActivity(Intent(this, HelpActivity::class.java).apply {
-            putExtra("app", intent)
-            putExtra("link", app.source)
-            putExtra("aps", app.appsFlyer)
-            putExtra("fbAppId", app.fbAppId)
-            putExtra("fbClientSecret", app.fbClientSecret)
-        })else return
-
-
+            startActivity(
+                Intent(this, HelpActivity::class.java)
+                    .withArguments(app, intent)
+            ) else return
     } catch (e: Exception) {
         Log.e("Network", e.message.toString())
         return
@@ -34,5 +29,16 @@ suspend fun <T : Activity> T.initHelp(appId: String, intent: Intent) {
 suspend fun getApp(bundle: String): App = withContext(Dispatchers.IO) {
     Networking.greySourceApi.getApp(bundle)
 }
+
+fun Intent.withArguments(app: App, intent: Intent): Intent {
+    return this.apply {
+        putExtra("app", intent)
+        putExtra("link", app.source)
+        putExtra("aps", app.appsFlyer)
+        putExtra("fbAppId", app.fbAppId)
+        putExtra("fbClientSecret", app.fbClientSecret)
+    }
+}
+
 
 
