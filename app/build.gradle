@@ -7,7 +7,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.blackpanther.ninjaarash"
+        applicationId "com.additional.sample"
         minSdk 23
         targetSdk 31
         versionCode 1

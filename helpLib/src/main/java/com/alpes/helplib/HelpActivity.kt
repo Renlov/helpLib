@@ -15,7 +15,6 @@ import android.view.View
 import android.view.WindowManager
 import android.webkit.*
 import android.widget.FrameLayout
-import android.widget.ProgressBar
 import bolts.AppLinks
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
