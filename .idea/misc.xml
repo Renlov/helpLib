@@ -7,10 +7,12 @@
         <entry key="..\:/Users/renlo/AndroidStudioProjects/helpLib/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/renlo/AndroidStudioProjects/helpLib/helpLib/src/main/res/layout/activity_help.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/renlo/AndroidStudioProjects/helpLib/helpLib/src/main/res/layout/activity_start.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/renlo/StudioProjects/helpLib/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/Users/renlo/StudioProjects/helpLib/helpLib/src/main/res/layout/activity_help.xml" value="0.3625" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
