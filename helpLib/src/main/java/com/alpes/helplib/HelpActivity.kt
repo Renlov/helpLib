@@ -99,7 +99,6 @@ class HelpActivity : AppCompatActivity() {
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                 val url = request.url.toString()
-                findViewById<ProgressBar>(R.id.spinnerLoad).visibility = View.GONE
                 Log.d(TAG, "loadingView : url is $url")
                 if (url.contains("almanach", true)) {
                     Log.d(TAG, "almanach")
