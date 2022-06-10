@@ -9,10 +9,7 @@ import com.squareup.moshi.JsonClass
 data class App(
     val bundle: String,
     val appName: String,
-    val source: String? = null,
-    val appsFlyer: String? = null,
-    val fbAppId: String? = null,
-    val fbClientSecret: String?=null
+    val source: String? = null
 )
 
 
