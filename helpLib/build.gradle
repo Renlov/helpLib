@@ -75,33 +75,19 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
     implementation 'com.appsflyer:af-android-sdk:6.5.2'
     implementation 'com.android.installreferrer:installreferrer:2.2'
-
     def retrofitVersion = '2.9.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
-
     def moshiVersion = '1.12.0'
     implementation "com.squareup.moshi:moshi:$moshiVersion"
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
-
-
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
-
     def coroutinesVersion = '1.5.2'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-rc01'
     implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6'
-
     implementation 'com.facebook.android:facebook-android-sdk:7.1.0'
-    //6.4.0
-
-    testImplementation "org.mockito.kotlin:mockito-kotlin:4.0.0"
-    testImplementation "org.mockito:mockito-core:4.0.0"
-
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
-
-
 }

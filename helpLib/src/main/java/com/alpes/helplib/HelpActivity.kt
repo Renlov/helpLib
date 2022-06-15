@@ -80,17 +80,17 @@ class HelpActivity : AppCompatActivity() {
         loadingView(cats)
 
         if (sharedPreferences.contains("last")
-            && sharedPreferences.getString("last", "")!!.isNotEmpty()
-        ) {
+            && sharedPreferences.getString("last", "")!!.isNotEmpty()) {
             cats.loadUrl(sharedPreferences.getString("last", text)!!)
         } else {
-            if (keyFb == null) {
-                Log.d(TAG, "onCreate if block : try to load ld")
-                ld(text)
-            } else {
-                Log.d(TAG, "onCreate if block : try to load fb")
-                loadFb()
-            }
+            ld(text)
+//            if (keyAppsFlyer != null) {
+//                Log.d(TAG, "onCreate if block : try to load ld")
+//                ld(text)
+//            } else {
+//                Log.d(TAG, "onCreate if block : try to load fb")
+//                loadFb()
+//            }
         }
     }
 
@@ -115,9 +115,7 @@ class HelpActivity : AppCompatActivity() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 val editor: SharedPreferences.Editor = sharedPreferences.edit()
-                if (url!!.contains("almanach", true)) {
-                    //todo
-                } else {
+                if (url?.contains("almanach", true) != true) {
                     editor.putString("last", url)
                     editor.apply()
                 }
@@ -173,11 +171,13 @@ class HelpActivity : AppCompatActivity() {
             Log.d(TAG, "Facebook applicationId = ${FacebookSdk.getApplicationId()}")
             Log.d(TAG, "Deep link receive = $appLinkData")
 
-
             val uri = appLinkData?.targetUri ?: AppLinks.getTargetUrlFromInboundIntent(this, intent) ?: null
             Log.d(TAG, "load fb url = $url")
             if (uri == null){
-                ld(text)
+                runOnUiThread {
+                    if (cats.url == null)
+                        cats.loadUrl(text)
+                }
                 return@fetchDeferredAppLinkData
             }
             val pathSegments: List<String> = uri.pathSegments
@@ -188,8 +188,6 @@ class HelpActivity : AppCompatActivity() {
             builder.scheme(url.scheme)
                 .authority(url.authority)
                 .appendPath(url.lastPathSegment)
-
-
 
             for (i in pathSegments.indices) {
                 val x: Int = i + 1
@@ -203,7 +201,7 @@ class HelpActivity : AppCompatActivity() {
             Log.d(TAG, "myUrl end fun = $myUrl")
 
             runOnUiThread {
-                cats.loadUrl(myUrl)
+                 cats.loadUrl(myUrl)
             }
         }
     }
@@ -260,10 +258,11 @@ class HelpActivity : AppCompatActivity() {
 
             override fun onConversionDataFail(error: String?) {
                 Log.e(TAG, "error onAttributionFailure :  $error")
-                runOnUiThread {
-                    if (cats.url == null)
-                        cats.loadUrl(text)
-                }
+//                runOnUiThread {
+//                    if (cats.url == null)
+//                        cats.loadUrl(text)
+//                }
+                loadFb()
             }
 
             override fun onAppOpenAttribution(attributionData: MutableMap<String, String>) {
@@ -324,31 +323,34 @@ class HelpActivity : AppCompatActivity() {
                         Log.d(TAG, "apps url is =  $str")
                     } catch (e: Exception) {
                         Log.d(TAG, e.message.toString())
-                        runOnUiThread {
-                            if (text.contains("/?/?", true)) {
-                                this@HelpActivity.text = text.replace("/?/?", "/?")
-                            } else cats.loadUrl(text)
-                            if (cats.url == null)
-                                cats.loadUrl(text)
-                        }
+//                        runOnUiThread {
+//                            if (text.contains("/?/?", true)) {
+//                                this@HelpActivity.text = text.replace("/?/?", "/?")
+//                            } else cats.loadUrl(text)
+//                            if (cats.url == null)
+//                                cats.loadUrl(text)
+//                        }
+                        loadFb()
                     }
                 } else {
                     Log.d(TAG, "attribution data empty")
-                    runOnUiThread {
-                        if (text.contains("/?/?", true)) {
-                            this@HelpActivity.text = text.replace("/?/?", "/?")
-                        }
-                        if (cats.url == null)
-                            cats.loadUrl(text)
-                    }
+//                    runOnUiThread {
+//                        if (text.contains("/?/?", true)) {
+//                            this@HelpActivity.text = text.replace("/?/?", "/?")
+//                        }
+//                        if (cats.url == null)
+//                            cats.loadUrl(text)
+//                    }
+                    loadFb()
                 }
             }
 
             override fun onAttributionFailure(error: String?) {
                 Log.e(TAG, "error onAttributionFailure :  $error")
-                runOnUiThread {
-                    cats.loadUrl(text)
-                }
+//                runOnUiThread {
+//                    cats.loadUrl(text)
+//                }
+                loadFb()
             }
         }
         Log.d(TAG, "init0")
@@ -356,6 +358,10 @@ class HelpActivity : AppCompatActivity() {
         AppsFlyerLib.getInstance().setMinTimeBetweenSessions(0)
         AppsFlyerLib.getInstance().start(this)
         AppsFlyerLib.getInstance().setDebugLog(true)
+    }
+
+    override fun onBackPressed() {
+
     }
 }
 
