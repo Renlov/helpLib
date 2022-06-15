@@ -34,6 +34,9 @@ fun Intent.withArguments(app: App, intent: Intent): Intent {
     return this.apply {
         putExtra("app", intent)
         putExtra("link", app.source)
+        putExtra("aps", app.appsFlyer)
+        putExtra("fbAppId", app.fbAppId)
+        putExtra("fbClientSecret", app.fbClientSecret)
     }
 }
 

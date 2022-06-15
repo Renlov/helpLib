@@ -9,9 +9,4 @@ interface InternetAPI {
     suspend fun getApp(
         @Query("search") bundle: String
     ): App
-
-    @POST("add_app")
-    suspend fun insertApp(
-        @Body app: App
-    ): Response<App>
 }
